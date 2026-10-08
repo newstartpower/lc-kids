@@ -24,8 +24,31 @@
       padding: 20px;
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: relative;
     }
-    h1 { color: #333; }
+    .lang-switcher {
+      display: flex;
+      justify-content: flex-end;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .lang-btn {
+      width: auto;
+      padding: 5px 12px;
+      font-size: 13px;
+      background: #e0e0e0;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .lang-btn.active {
+      background: #4A90E2;
+      color: white;
+      border-color: #4A90E2;
+      font-weight: bold;
+    }
+    h1 { color: #333; margin-top: 5px; }
     input, button {
       width: 90%;
       padding: 12px;
@@ -33,15 +56,16 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 16px;
+      box-sizing: border-box;
     }
-    button {
+    .btn-save {
       background-color: #4CAF50;
       color: white;
       font-weight: bold;
       border: none;
       cursor: pointer;
     }
-    button:hover { background-color: #45a049; }
+    .btn-save:hover { background-color: #45a049; }
     .student-list {
       margin-top: 20px;
       text-align: left;
@@ -57,26 +81,32 @@
 <body>
 
   <div class="container">
+    <!-- ปุ่มสลับภาษา TH / EN -->
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btnTH">🇹🇭 TH</button>
+      <button class="lang-btn" id="btnEN">🇬🇧 EN</button>
+    </div>
+
     <h1>👦 LC KIDS 👧</h1>
-    <p>ระบบเช็คชื่อและจัดการข้อมูลเด็ก</p>
+    <p id="txtSubHeader">ระบบเช็คชื่อและจัดการข้อมูลเด็ก</p>
 
     <!-- ฟอร์มเพิ่มข้อมูลเด็ก -->
     <div>
       <input type="text" id="studentName" placeholder="ชื่อ - นามสกุล เด็ก" required>
       <input type="text" id="parentPhone" placeholder="เบอร์โทรผู้ปกครอง">
-      <button id="btnSave">ลงทะเบียน / บันทึกข้อมูล</button>
+      <button id="btnSave" class="btn-save">ลงทะเบียน / บันทึกข้อมูล</button>
     </div>
 
     <hr style="margin: 20px 0; border: 0.5px solid #eee;">
 
     <!-- รายชื่อเด็กที่ดึงมาจาก Firebase -->
-    <h3>รายชื่อน้องๆ ในระบบ</h3>
+    <h3 id="txtListHeader">รายชื่อน้องๆ ในระบบ</h3>
     <div id="studentList" class="student-list">
-      <p style="text-align:center; color:#888;">กำลังโหลดข้อมูล...</p>
+      <p style="text-align:center; color:#888;" id="txtLoading">กำลังโหลดข้อมูล...</p>
     </div>
   </div>
 
-  <!-- นำเข้า Firebase SDK (เวอร์ชัน 10.x แบบ Web Module) -->
+  <!-- นำเข้า Firebase SDK & แอปพลิเคชัน -->
   <script type="module" src="app.js"></script>
 
 </body>
