@@ -17,17 +17,68 @@ const firebaseConfig = {
 // เริ่มต้นใช้งาน Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-// อ้างอิงถึงคอลเลกชัน "students" ใน Firestore
 const studentsRef = collection(db, "students");
+
+// 🌐 ระบบคลังคำศัพท์ 2 ภาษา (i18n)
+let currentLang = 'th';
+
+const translations = {
+  th: {
+    subHeader: "ระบบเช็คชื่อและจัดการข้อมูลเด็ก",
+    namePlaceholder: "ชื่อ - นามสกุล เด็ก",
+    phonePlaceholder: "เบอร์โทรผู้ปกครอง",
+    btnSave: "ลงทะเบียน / บันทึกข้อมูล",
+    listHeader: "รายชื่อน้องๆ ในระบบ",
+    loading: "กำลังโหลดข้อมูล...",
+    noData: "ยังไม่มีข้อมูลเด็ก",
+    alertNoName: "กรุณากรอกชื่อเด็กด้วยครับ",
+    alertSuccess: "บันทึกข้อมูลเรียบร้อยแล้ว!",
+    alertError: "เกิดข้อผิดพลาดในการบันทึกข้อมูล",
+    phoneLabel: "โทร:"
+  },
+  en: {
+    subHeader: "Children Check-in & Management System",
+    namePlaceholder: "Child's Full Name",
+    phonePlaceholder: "Parent's Phone Number",
+    btnSave: "Register / Save Data",
+    listHeader: "Children List",
+    loading: "Loading data...",
+    noData: "No children records yet",
+    alertNoName: "Please enter child's name",
+    alertSuccess: "Registration saved successfully!",
+    alertError: "An error occurred while saving",
+    phoneLabel: "Tel:"
+  }
+};
+
+// ฟังก์ชันสำหรับเปลี่ยนภาษาหน้าแอป
+function setLanguage(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+
+  document.getElementById('txtSubHeader').innerText = t.subHeader;
+  document.getElementById('studentName').placeholder = t.namePlaceholder;
+  document.getElementById('parentPhone').placeholder = t.phonePlaceholder;
+  document.getElementById('btnSave').innerText = t.btnSave;
+  document.getElementById('txtListHeader').innerText = t.listHeader;
+
+  // เปลี่ยนสถานะปุ่มภาษา
+  document.getElementById('btnTH').classList.toggle('active', lang === 'th');
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+}
+
+// ปุ่มกดสลับภาษา
+document.getElementById('btnTH').addEventListener('click', () => setLanguage('th'));
+document.getElementById('btnEN').addEventListener('click', () => setLanguage('en'));
 
 // 1. ฟังก์ชันบันทึกข้อมูลเด็กใหม่ลง Firebase
 document.getElementById('btnSave').addEventListener('click', async () => {
   const nameInput = document.getElementById('studentName').value.trim();
   const phoneInput = document.getElementById('parentPhone').value.trim();
+  const t = translations[currentLang];
 
   if (!nameInput) {
-    alert("กรุณากรอกชื่อเด็กด้วยครับ");
+    alert(t.alertNoName);
     return;
   }
 
@@ -37,12 +88,12 @@ document.getElementById('btnSave').addEventListener('click', async () => {
       parentPhone: phoneInput,
       createdAt: new Date()
     });
-    alert("บันทึกข้อมูลน้อง " + nameInput + " เรียบร้อยแล้ว!");
+    alert(t.alertSuccess);
     document.getElementById('studentName').value = '';
     document.getElementById('parentPhone').value = '';
   } catch (error) {
     console.error("Error adding document: ", error);
-    alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    alert(t.alertError);
   }
 });
 
@@ -50,9 +101,10 @@ document.getElementById('btnSave').addEventListener('click', async () => {
 onSnapshot(studentsRef, (snapshot) => {
   const listContainer = document.getElementById('studentList');
   listContainer.innerHTML = '';
+  const t = translations[currentLang];
 
   if (snapshot.empty) {
-    listContainer.innerHTML = '<p style="text-align:center; color:#888;">ยังไม่มีข้อมูลเด็ก</p>';
+    listContainer.innerHTML = `<p style="text-align:center; color:#888;">${t.noData}</p>`;
     return;
   }
 
@@ -60,7 +112,7 @@ onSnapshot(studentsRef, (snapshot) => {
     const data = doc.data();
     const item = document.createElement('div');
     item.className = 'student-item';
-    item.innerHTML = `<strong>น้อง${data.name}</strong> <br><small>โทร: ${data.parentPhone || '-'}</small>`;
+    item.innerHTML = `<strong>${data.name}</strong> <br><small>${t.phoneLabel} ${data.parentPhone || '-'}</small>`;
     listContainer.appendChild(item);
   });
 });
