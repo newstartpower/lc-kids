@@ -1,0 +1,66 @@
+// นำเข้าโมดูล Firebase Firestore
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// ⚙️ ค่า Config จาก Firebase ของคุณครู
+const firebaseConfig = {
+  apiKey: "AIzaSyB2ghgguwvbX4FN6isuFDXp2K",
+  authDomain: "liberty-kids-app-11.firebaseapp.com",
+  databaseURL: "https://liberty-kids-app-11-default-rtdb.firebaseio.com",
+  projectId: "liberty-kids-app-11",
+  storageBucket: "liberty-kids-app-11.appspot.com",
+  messagingSenderId: "837727299448",
+  appId: "1:837727299448:web:ded1e352c53dceb756ca8d",
+  measurementId: "G-TBLJ7JCY3Y"
+};
+
+// เริ่มต้นใช้งาน Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// อ้างอิงถึงคอลเลกชัน "students" ใน Firestore
+const studentsRef = collection(db, "students");
+
+// 1. ฟังก์ชันบันทึกข้อมูลเด็กใหม่ลง Firebase
+document.getElementById('btnSave').addEventListener('click', async () => {
+  const nameInput = document.getElementById('studentName').value.trim();
+  const phoneInput = document.getElementById('parentPhone').value.trim();
+
+  if (!nameInput) {
+    alert("กรุณากรอกชื่อเด็กด้วยครับ");
+    return;
+  }
+
+  try {
+    await addDoc(studentsRef, {
+      name: nameInput,
+      parentPhone: phoneInput,
+      createdAt: new Date()
+    });
+    alert("บันทึกข้อมูลน้อง " + nameInput + " เรียบร้อยแล้ว!");
+    document.getElementById('studentName').value = '';
+    document.getElementById('parentPhone').value = '';
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+  }
+});
+
+// 2. ฟังก์ชันดึงและอัปเดตรายชื่อเด็กแบบ Realtime
+onSnapshot(studentsRef, (snapshot) => {
+  const listContainer = document.getElementById('studentList');
+  listContainer.innerHTML = '';
+
+  if (snapshot.empty) {
+    listContainer.innerHTML = '<p style="text-align:center; color:#888;">ยังไม่มีข้อมูลเด็ก</p>';
+    return;
+  }
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    const item = document.createElement('div');
+    item.className = 'student-item';
+    item.innerHTML = `<strong>น้อง${data.name}</strong> <br><small>โทร: ${data.parentPhone || '-'}</small>`;
+    listContainer.appendChild(item);
+  });
+});
