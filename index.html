@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LC KIDS App</title>
+  
+  <!-- ตั้งค่า PWA สำหรับไอคอนหน้าจอ Home -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4A90E2">
+  
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif, Tahoma;
+      background-color: #f4f7f6;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      background: white;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    input, button {
+      width: 90%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background-color: #45a049; }
+    .student-list {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .student-item {
+      background: #eef2f5;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>👦 LC KIDS 👧</h1>
+    <p>ระบบเช็คชื่อและจัดการข้อมูลเด็ก</p>
+
+    <!-- ฟอร์มเพิ่มข้อมูลเด็ก -->
+    <div>
+      <input type="text" id="studentName" placeholder="ชื่อ - นามสกุล เด็ก" required>
+      <input type="text" id="parentPhone" placeholder="เบอร์โทรผู้ปกครอง">
+      <button id="btnSave">ลงทะเบียน / บันทึกข้อมูล</button>
+    </div>
+
+    <hr style="margin: 20px 0; border: 0.5px solid #eee;">
+
+    <!-- รายชื่อเด็กที่ดึงมาจาก Firebase -->
+    <h3>รายชื่อน้องๆ ในระบบ</h3>
+    <div id="studentList" class="student-list">
+      <p style="text-align:center; color:#888;">กำลังโหลดข้อมูล...</p>
+    </div>
+  </div>
+
+  <!-- นำเข้า Firebase SDK (เวอร์ชัน 10.x แบบ Web Module) -->
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>
