@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คริสตจักรเด็กเสรีภาพกรุงเทพ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Mali:wght@600;700&family=Noto+Sans+Thai:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+  <div id="setupWarn" class="setup" hidden>ยังไม่ได้ใส่ค่า Firebase ในไฟล์ firebase-config.js เปิดไฟล์นั้นแล้วแทนที่ข้อความ PASTE_... ด้วยค่าจริงจากหน้า Project settings</div>
+  <header class="top">
+    <img class="logo" src="logo.jpg" alt="LC KIDS" draggable="false">
+    <div>
+      <div class="kicker">เช็กอิน · เช็กเอาต์</div>
+      <h1>คริสตจักรเด็กเสรีภาพ กรุงเทพ</h1>
+    </div>
+  </header>
+
+  <!-- ================= หน้าบ้าน: ผู้ปกครอง ================= -->
+  <main id="parentView" class="col">
+    <section id="s-cover" class="screen">
+      <div class="cover">
+        <img src="logo.jpg" alt="LC KIDS" draggable="false">
+        <div class="th">คริสตจักรเด็กเสรีภาพ กรุงเทพ</div>
+        <button class="btn" id="btnStart" type="button">แตะเพื่อเริ่มใช้งาน</button>
+      </div>
+    </section>
+
+    <section id="s-login" class="screen" hidden>
+      <div class="card">
+        <h2>ยินดีต้อนรับ</h2>
+        <p class="lead">ลงทะเบียนครั้งแรกด้วยบัญชี LINE จากนั้นสแกนหน้าทุกครั้งที่มาส่งหรือมารับน้อง</p>
+        <button class="btn line" id="btnLine" type="button">เข้าสู่ระบบด้วย LINE</button>
+        <p class="note">ต้นแบบ: ปุ่มนี้ยังไม่เชื่อม LINE Login จริง ระบบใช้การล็อกอินแบบไม่ระบุชื่อของ Firebase ผูกกับเครื่องนี้</p>
+      </div>
+    </section>
+
+    <section id="s-register" class="screen" hidden>
+      <form class="card" id="regForm" novalidate>
+        <h2>ลงทะเบียนเด็กและผู้ปกครอง</h2>
+        <div class="grid2">
+          <div class="field"><label for="f-nick">ชื่อเล่นเด็ก</label><input id="f-nick" type="text" autocomplete="off" maxlength="40"></div>
+          <div class="field"><label for="f-phone">เบอร์โทรผู้ปกครอง</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20"></div>
+          <div class="field"><label for="f-first">ชื่อจริงเด็ก</label><input id="f-first" type="text" autocomplete="off" maxlength="60"></div>
+          <div class="field"><label for="f-last">นามสกุลเด็ก</label><input id="f-last" type="text" autocomplete="off" maxlength="60"></div>
+        </div>
+        <div class="field"><label for="f-guardian">ชื่อผู้ปกครอง</label><input id="f-guardian" type="text" autocomplete="name" maxlength="80"></div>
+        <div>
+          <div class="lbl" style="margin-bottom:6px">ถ่ายรูปหน้าสดจากกล้องเท่านั้น ห้ามเลือกรูปจากแกลเลอรีหรือรูปแคปหน้าจอ</div>
+          <div class="photos">
+            <label class="pick" id="pk-parent"><span>แตะเพื่อถ่ายรูปผู้ปกครอง</span><input id="ph-parent" type="file" accept="image/*" capture="user"></label>
+            <label class="pick" id="pk-child"><span>แตะเพื่อถ่ายรูปเด็ก</span><input id="ph-child" type="file" accept="image/*" capture="environment"></label>
+          </div>
+        </div>
+        <div class="pdpa" tabindex="0" aria-label="ข้อความยินยอม PDPA">
+          <p><strong>หนังสือแจ้งและขอความยินยอม (PDPA) ฉบับร่าง</strong></p>
+          <p>คริสตจักรเด็กเสรีภาพ กรุงเทพ เก็บและใช้ชื่อ-นามสกุลและชื่อเล่นของเด็ก ชื่อและเบอร์โทรผู้ปกครอง รูปถ่ายเด็กและผู้ปกครอง และรูปใบหน้าผู้ปกครองที่ถ่ายทุกครั้งที่มารับ-ส่ง</p>
+          <p>วัตถุประสงค์: ยืนยันตัวตนผู้รับ-ส่งเด็ก บันทึกเวลาเข้า-ออกอย่างละเอียด ดูแลความปลอดภัยของเด็ก และติดต่อผู้ปกครองเมื่อมีเหตุจำเป็น</p>
+          <p>รูปใบหน้าเป็นข้อมูลชีวภาพ ซึ่งเป็นข้อมูลอ่อนไหวตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล ต้องได้รับความยินยอมโดยชัดแจ้ง ผู้ลงทะเบียนให้ความยินยอมในฐานะผู้ปกครองตามกฎหมายของเด็ก</p>
+          <p>ผู้เข้าถึงข้อมูล: เจ้าหน้าที่ที่ได้รับมอบหมายเท่านั้น ระยะเวลาเก็บ: [คริสตจักรระบุ] สิทธิของท่าน: ขอเข้าถึง แก้ไข ลบ หรือถอนความยินยอมได้ที่ [ช่องทางติดต่อของคริสตจักร]</p>
+          <p>(ข้อความนี้เป็นตัวอย่าง โปรดให้ผู้ดูแลข้อมูลหรือที่ปรึกษากฎหมายของคริสตจักรตรวจและกรอกส่วนในวงเล็บก่อนใช้จริง)</p>
+        </div>
+        <label class="check" for="f-pdpa"><input id="f-pdpa" type="checkbox"><span>ข้าพเจ้าอ่านและยินยอมให้เก็บและใช้ข้อมูลข้างต้น รวมถึงรูปใบหน้า</span></label>
+        <div id="f-err" class="err" role="alert" hidden></div>
+        <button class="btn" id="f-submit" type="submit" disabled>ส่งการลงทะเบียน</button>
+      </form>
+    </section>
+
+    <section id="s-wait" class="screen" hidden>
+      <div class="card">
+        <h2>ลงทะเบียนเรียบร้อย</h2>
+        <p class="lead" id="wait-text"></p>
+        <button class="btn" id="btnRecheck" type="button">ตรวจสอบว่าได้ QR Code แล้วหรือยัง</button>
+        <button class="btn ghost" id="btnLogoutW" type="button">ออกจากระบบ</button>
+      </div>
+    </section>
+
+    <section id="s-face" class="screen" hidden>
+      <div class="card">
+        <h2 id="face-title">สแกนหน้าเพื่อเข้าใช้งาน</h2>
+        <p class="lead">ถ่ายรูปหน้าผู้ปกครองสดจากกล้องให้เห็นชัดเจน ไม่รับรูปจากแกลเลอรีหรือรูปแคปหน้าจอ ระบบจะบันทึกรูปไว้ให้เจ้าหน้าที่ตรวจเทียบกับรูปที่ลงทะเบียน</p>
+        <label class="btn" for="ph-face" id="btnFace" style="cursor:pointer">ถ่ายรูปหน้า<input id="ph-face" type="file" accept="image/*" capture="user" style="position:absolute;opacity:0;width:1px;height:1px"></label>
+        <button class="btn ghost" id="btnLogoutF" type="button">ออกจากระบบ</button>
+      </div>
+    </section>
+
+    <section id="s-pass" class="screen" hidden>
+      <div class="card pass">
+        <h2>แสดง QR นี้ให้เจ้าหน้าที่สแกน</h2>
+        <div class="live"><span class="dot" aria-hidden="true"></span><span class="mono" id="passClock"></span><span id="passLeft"></span></div>
+        <div class="qrbox sensitive" id="qrHost"></div>
+        <div class="mono codebig sensitive" id="passCode"></div>
+        <div class="expired" id="passExpired" hidden>QR หมดเวลาแล้ว ถ่ายรูปหน้าใหม่เพื่อรับ QR ใหม่</div>
+        <div class="who">
+          <img class="av" id="passChild" alt="รูปเด็ก">
+          <div style="min-width:0"><div id="passName" style="font-weight:700"></div><div class="note" id="passTime"></div></div>
+          <img class="av" id="passSelfie" alt="รูปหน้าที่สแกน">
+        </div>
+        <button class="btn ghost" id="btnRescan" type="button">ถ่ายรูปหน้าใหม่</button>
+        <button class="linkbtn" id="btnLogoutP" type="button">ออกจากระบบ</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= หลังบ้าน: เจ้าหน้าที่ ================= -->
+  <main id="adminView" class="wide" hidden>
+    <section id="adminGate" class="col">
+      <form class="card" id="gateForm">
+        <h2>หลังบ้านสำหรับเจ้าหน้าที่</h2>
+        <div class="field"><label for="adminPw">รหัสเข้าหลังบ้าน</label><input id="adminPw" type="password" inputmode="numeric" autocomplete="off"></div>
+        <div id="gateErr" class="err" role="alert" hidden>รหัสไม่ถูกต้อง</div>
+        <button class="btn" type="submit">เข้าสู่หลังบ้าน</button>
+        <button class="btn ghost" type="button" id="btnBackP">กลับหน้าผู้ปกครอง</button>
+      </form>
+    </section>
+
+    <section id="adminApp" class="wide" hidden>
+      <div class="bar">
+        <h2>หลังบ้าน</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn ghost small" id="btnLock" type="button">ล็อกหลังบ้าน</button>
+          <button class="btn ghost small" id="btnBackP2" type="button">หน้าผู้ปกครอง</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat hot"><div class="n" id="st-in">0</div><div class="t">เด็กที่อยู่ในโบสถ์ตอนนี้</div></div>
+        <div class="stat"><div class="n" id="st-drop">0</div><div class="t">ส่งเด็กวันนี้</div></div>
+        <div class="stat"><div class="n" id="st-pick">0</div><div class="t">รับเด็กวันนี้</div></div>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="t-log" data-tab="log" aria-selected="true">บันทึกรับ-ส่ง</button>
+        <button class="tab" role="tab" id="t-scan" data-tab="scan" aria-selected="false">สแกน QR</button>
+        <button class="tab" role="tab" id="t-fam" data-tab="fam" aria-selected="false">ครอบครัวและ QR</button>
+      </div>
+
+      <div id="p-log" class="wide">
+        <div class="filters">
+          <div class="field"><label for="fl-date">วันที่</label><input id="fl-date" type="date"></div>
+          <div class="field"><label for="fl-q">ค้นหาชื่อเด็กหรือผู้ปกครอง</label><input id="fl-q" type="search"></div>
+          <button class="btn ghost small" id="fl-clear" type="button">ล้างตัวกรอง</button>
+        </div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>วันที่</th><th>เวลา (วินาที)</th><th>รายการ</th><th>เด็ก</th><th>ผู้ปกครองที่สแกนหน้า</th><th>เบอร์โทร</th></tr></thead>
+          <tbody id="logBody"></tbody>
+        </table></div>
+        <p class="note">แตะแถวเพื่อดูรูปหน้าที่สแกนเทียบกับรูปตอนลงทะเบียน</p>
+      </div>
+
+      <div id="p-scan" class="wide" hidden>
+        <div class="card">
+          <h2 style="font-size:18px">สแกนหรือพิมพ์รหัส QR</h2>
+          <form class="scanbox" id="scanForm">
+            <label class="lbl" for="scanIn" style="width:100%">เครื่องสแกนแบบพิมพ์รหัสให้อัตโนมัติใช้ได้ กดเคอร์เซอร์ไว้ในช่องนี้แล้วสแกน</label>
+            <input id="scanIn" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false">
+            <button class="btn" type="submit">ค้นหา</button>
+          </form>
+        </div>
+        <div id="scanResult" class="card result" hidden></div>
+      </div>
+
+      <div id="p-fam" class="wide" hidden>
+        <div class="bar"><span class="note" id="famCount"></span><button class="btn small" id="btnAdd" type="button">+ เพิ่มคน</button></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>เด็ก</th><th>ผู้ปกครอง</th><th>เบอร์โทร</th><th>ลงทะเบียนเมื่อ</th><th>รหัส QR</th></tr></thead>
+          <tbody id="famBody"></tbody>
+        </table></div>
+        <p class="note">ใส่รหัสเองหรือกดสุ่ม แล้วกดบันทึก ผู้ปกครองจะเห็น QR ของรหัสนี้หลังสแกนหน้า การลบจะลบข้อมูลลงทะเบียน รูป และ QR แต่เก็บบันทึกรับ-ส่งไว้</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span id="modeNote"></span>
+    <button class="linkbtn" id="adminLink" type="button">สำหรับเจ้าหน้าที่</button>
+  </footer>
+</div>
+
+<div id="overlay" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
